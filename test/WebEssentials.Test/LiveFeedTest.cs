@@ -20,8 +20,8 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public async Task UpdateAsync()
         {
-            var file = new FileInfo("..\\..\\artifacts\\feed.json");
-            var feed = new LiveFeed(file.FullName, _localPath);
+            FileInfo file = new FileInfo("..\\..\\artifacts\\feed.json");
+            LiveFeed feed = new LiveFeed(file.FullName, _localPath);
 
             await feed.UpdateAsync();
             File.Delete(_localPath);
@@ -35,7 +35,7 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public async Task UpdateInvalidJSONAsync()
         {
-            var feed = new LiveFeed("http://example.com", _localPath);
+            LiveFeed feed = new LiveFeed("http://example.com", _localPath);
 
             await feed.UpdateAsync();
 
@@ -46,7 +46,7 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public async Task Update404Async()
         {
-            var feed = new LiveFeed("http://asdlfkhasdflijsdflisjdfjoi23498734so08s0d8f.dk", _localPath);
+            LiveFeed feed = new LiveFeed("http://asdlfkhasdflijsdflisjdfjoi23498734so08s0d8f.dk", _localPath);
 
             await feed.UpdateAsync();
 
@@ -57,7 +57,7 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public async Task ParsingAsync()
         {
-            var feed = new LiveFeed("", _localPath);
+            LiveFeed feed = new LiveFeed("", _localPath);
 
             string content = @"{
             ""Add New File"": {
@@ -79,7 +79,7 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public async Task ParsingInvalidJsonAsync()
         {
-            var feed = new LiveFeed("", _localPath);
+            LiveFeed feed = new LiveFeed("", _localPath);
 
             string content = "invalid json";
 

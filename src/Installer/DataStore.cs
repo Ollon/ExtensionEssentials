@@ -1,24 +1,30 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="DataStore.cs" company="Ollon, LLC">
+//     Copyright (c) 2017 Ollon, LLC. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using ExtensionEssentials.Resources;
 using Newtonsoft.Json;
 
 namespace ExtensionEssentials
 {
     public class DataStore
     {
-        private readonly string _installed = Resources.Text.Installed;
-        private readonly string _uninstalled = Resources.Text.Uninstalled;
-
+        private readonly string _installed = ExtensionText.Installed;
+        private readonly string _uninstalled = ExtensionText.Uninstalled;
         private static string _logFile;
-        private IRegistryKey _key;
+        private readonly IRegistryKey _key;
 
         public DataStore(IRegistryKey key, string filePath)
         {
             _logFile = filePath;
             _key = key;
-
             Initialize();
         }
 
@@ -43,7 +49,6 @@ namespace ExtensionEssentials
         {
             string json = JsonConvert.SerializeObject(Log);
             File.WriteAllText(_logFile, json);
-
             UpdateRegistry();
         }
 
@@ -57,7 +62,7 @@ namespace ExtensionEssentials
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex);
+                Debug.Write(ex);
                 return false;
             }
         }
@@ -74,7 +79,7 @@ namespace ExtensionEssentials
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex);
+                Debug.Write(ex);
                 File.Delete(_logFile);
             }
         }
@@ -82,7 +87,6 @@ namespace ExtensionEssentials
         private void UpdateRegistry()
         {
             string uninstall = string.Join(";", Log.Where(l => l.Action == _uninstalled).Select(l => l.Id));
-
             using (_key.CreateSubKey(Constants.RegistrySubKey))
             {
                 _key.SetValue("disable", uninstall);
@@ -100,8 +104,11 @@ namespace ExtensionEssentials
             }
 
             public string Id { get; set; }
+
             public string Name { get; set; }
+
             public DateTime Date { get; set; }
+
             public string Action { get; set; }
 
             public override string ToString()

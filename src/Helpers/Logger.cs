@@ -1,12 +1,19 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="Logger.cs" company="Ollon, LLC">
+//     Copyright (c) 2017 Ollon, LLC. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using ExtensionEssentials;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using ExtensionEssentials;
 
 internal static class Logger
 {
     private static IVsOutputWindowPane _pane;
-    private static IVsOutputWindow _output = (IVsOutputWindow)ServiceProvider.GlobalProvider.GetService(typeof(SVsOutputWindow));
+    private static readonly IVsOutputWindow _output = (IVsOutputWindow) ServiceProvider.GlobalProvider.GetService(typeof(SVsOutputWindow));
 
     public static void Log(string message, bool addNewLine = true)
     {
@@ -20,13 +27,12 @@ internal static class Logger
                     {
                         message += Environment.NewLine;
                     }
-
                     _pane.OutputString(message);
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex);
+                Debug.Write(ex);
             }
         });
     }
@@ -47,11 +53,10 @@ internal static class Logger
     {
         if (_pane == null)
         {
-            var guid = Guid.NewGuid();
+            Guid guid = Guid.NewGuid();
             _output.CreatePane(ref guid, Vsix.Name, 1, 1);
             _output.GetPane(ref guid, out _pane);
         }
-
         return _pane != null;
     }
 }

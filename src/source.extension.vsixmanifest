@@ -1,21 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-    <Metadata>
-        <Identity Id="272D01DA-07FC-43BF-ABB0-5B8569FED017" Version="15.3" Language="en-US" Publisher="Brad Marshall" />
-        <DisplayName>Extension Essentials 2017</DisplayName>
-        <Description xml:space="preserve">The easiest way to set up Visual Studio for the ultimate development experience. Requires Visual Studio 2017 Update 3 or newer</Description>
-        <License>Resources\LICENSE</License>
-        <Icon>Resources\Icon.png</Icon>
-        <PreviewImage>Resources\Icon.png</PreviewImage>
-        <Tags>extensions, vsix, install</Tags>
-    </Metadata>
-    <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0.26431, 16.0)" />
-    </Installation>
-    <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
-    </Prerequisites>
-    <Assets>
-        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-    </Assets>
+
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
+                 xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="272D01DA-07FC-43BF-ABB0-5B8569FED017" Version="15.3" Language="en-US" Publisher="Brad Marshall" />
+    <DisplayName>Extension Essentials 2017</DisplayName>
+    <Description xml:space="preserve">The easiest way to set up Visual Studio for the ultimate development experience. Requires Visual Studio 2017 Update 3 or newer</Description>
+    <License>Resources\LICENSE</License>
+    <Icon>Resources\Extension.png</Icon>
+    <PreviewImage>Resources\Extension.png</PreviewImage>
+    <Tags>extensions, vsix, install</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0.26431, 16.0)" />
+  </Installation>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)"
+                  DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%"
+           Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
 </PackageManifest>

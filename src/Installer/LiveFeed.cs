@@ -1,9 +1,16 @@
-﻿using Newtonsoft.Json.Linq;
+﻿// -----------------------------------------------------------------------
+// <copyright file="LiveFeed.cs" company="Ollon, LLC">
+//     Copyright (c) 2017 Ollon, LLC. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace ExtensionEssentials
 {
@@ -17,14 +24,15 @@ namespace ExtensionEssentials
         }
 
         public string LocalCachePath { get; }
+
         public string LiveFeedUrl { get; }
+
         public List<ExtensionEntry> Extensions { get; }
 
         public async Task<bool> UpdateAsync()
         {
             bool hasUpdates = await DownloadFileAsync();
             await ParseAsync();
-
             return hasUpdates;
         }
 
@@ -43,34 +51,32 @@ namespace ExtensionEssentials
         internal async Task ParseAsync()
         {
             if (!File.Exists(LocalCachePath))
+            {
                 return;
-
+            }
             try
             {
-                using (var reader = new StreamReader(LocalCachePath))
+                using (StreamReader reader = new StreamReader(LocalCachePath))
                 {
                     string json = await reader.ReadToEndAsync();
-                    var root = JObject.Parse(json);
-
+                    JObject root = JObject.Parse(json);
                     foreach (JProperty obj in root.Children<JProperty>())
                     {
                         JEnumerable<JProperty> child = obj.Children<JProperty>();
-
-                        var entry = new ExtensionEntry()
+                        ExtensionEntry entry = new ExtensionEntry
                         {
                             Name = obj.Name,
-                            Id = (string)root[obj.Name]["id"],
-                            MinVersion = new Version((string)root[obj.Name]["minVersion"] ?? "15.0"),
-                            MaxVersion = new Version((string)root[obj.Name]["maxVersion"] ?? "16.0")
+                            Id = (string) root[obj.Name]["id"],
+                            MinVersion = new Version((string) root[obj.Name]["minVersion"] ?? "15.0"),
+                            MaxVersion = new Version((string) root[obj.Name]["maxVersion"] ?? "16.0")
                         };
-
                         Extensions.Add(entry);
                     }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex);
+                Debug.Write(ex);
             }
         }
 
@@ -78,20 +84,20 @@ namespace ExtensionEssentials
         {
             string oldContent = File.Exists(LocalCachePath) ? File.ReadAllText(LocalCachePath) : "";
             string newContent = oldContent;
-
             try
             {
-                using (var client = new WebClient())
+                using (WebClient client = new WebClient())
                 {
                     newContent = await client.DownloadStringTaskAsync(LiveFeedUrl).ConfigureAwait(false);
 
                     // Bail as early as possible to minimize package init time
                     if (newContent == oldContent)
+                    {
                         return false;
+                    }
 
                     // Test if reponse is a valid JSON object
-                    var json = JObject.Parse(newContent);
-
+                    JObject json = JObject.Parse(newContent);
                     if (json != null)
                     {
                         Directory.CreateDirectory(Path.GetDirectoryName(LocalCachePath));
@@ -101,10 +107,9 @@ namespace ExtensionEssentials
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex);
+                Debug.Write(ex);
                 return false;
             }
-
             return oldContent != newContent;
         }
     }

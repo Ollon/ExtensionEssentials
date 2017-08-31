@@ -1,47 +1,45 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="LogWindow.xaml.cs" company="Ollon, LLC">
+//     Copyright (c) 2017 Ollon, LLC. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using ExtensionEssentials.Resources;
 
 namespace ExtensionEssentials.Commands
 {
     /// <summary>
-    /// Interaction logic for LogWindow.xaml
+    ///     Interaction logic for LogWindow.xaml
     /// </summary>
     public partial class LogWindow : Window
     {
         public LogWindow()
         {
             InitializeComponent();
+            Title = Vsix.Name;
 
-            Loaded += (s, e) =>
-            {
-                Title = Vsix.Name;
-                Icon = BitmapFrame.Create(new Uri("pack://application:,,,/WebEssentials;component/Resources/small.png", UriKind.RelativeOrAbsolute));
+            _reset.Content = ExtensionText.ReInstall;
+            _close.Content = ExtensionText.Close;
+            _activityLog.Content = ExtensionText.ActivityLog;
 
-                IEnumerable<string> logs = InstallerService.Installer.Store.Log.Select(l => l.ToString()).Reverse();
-                log.Text = string.Join(Environment.NewLine, logs);
-
-                reset.Content = ExtensionEssentials.Resources.Text.ReInstall;
-                close.Content = ExtensionEssentials.Resources.Text.Close;
-                ActivityLog.Content = ExtensionEssentials.Resources.Text.ActivityLog;
-
-                reset.Click += ResetClickAsync;
-            };
         }
 
-        private async void ResetClickAsync(object sender, RoutedEventArgs e)
+        private async Task ResetClickAsync(object sender, RoutedEventArgs e)
         {
-            string msg = ExtensionEssentials.Resources.Text.ResetLog;
+            string msg = ExtensionText.ResetLog;
             MessageBoxResult answer = MessageBox.Show(msg, Vsix.Name, MessageBoxButton.YesNo, MessageBoxImage.Question);
-
             if (answer != MessageBoxResult.Yes)
+            {
                 return;
-
+            }
             Telemetry.ResetInvoked();
             Close();
-
             try
             {
                 await InstallerService.ResetAsync().ConfigureAwait(false);
@@ -50,6 +48,11 @@ namespace ExtensionEssentials.Commands
             {
                 Logger.Log(ex.ToString());
             }
+        }
+
+        private void OnResetClick(object sender, RoutedEventArgs e)
+        {
+            ResetClickAsync(sender, e);
         }
     }
 }

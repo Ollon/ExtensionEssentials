@@ -1,4 +1,10 @@
-﻿using Microsoft.VisualStudio.Telemetry;
+﻿// -----------------------------------------------------------------------
+// <copyright file="Telemetry.cs" company="Ollon, LLC">
+//     Copyright (c) 2017 Ollon, LLC. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Microsoft.VisualStudio.Telemetry;
 
 namespace ExtensionEssentials
 {
@@ -8,7 +14,7 @@ namespace ExtensionEssentials
 
         public static void ResetInvoked()
         {
-            var telEvent = new UserTaskEvent(_namespace + "TimeToClose", TelemetryResult.Success);
+            UserTaskEvent telEvent = new UserTaskEvent(_namespace + "TimeToClose", TelemetryResult.Success);
             TelemetryService.DefaultSession.PostEvent(telEvent);
         }
 
@@ -21,14 +27,16 @@ namespace ExtensionEssentials
 
         public static void Install(string extensionId, bool success)
         {
-            var telEvent = new OperationEvent(_namespace + "Install", success ? TelemetryResult.Success : TelemetryResult.Failure);
+            OperationEvent telEvent =
+                new OperationEvent(_namespace + "Install", success ? TelemetryResult.Success : TelemetryResult.Failure);
             telEvent.Properties.Add("id", extensionId);
             TelemetryService.DefaultSession.PostEvent(telEvent);
         }
 
         public static void Uninstall(string extensionId, bool success)
         {
-            var telEvent = new OperationEvent(_namespace + "Uninstall", success ? TelemetryResult.Success : TelemetryResult.Failure);
+            OperationEvent telEvent =
+                new OperationEvent(_namespace + "Uninstall", success ? TelemetryResult.Success : TelemetryResult.Failure);
             telEvent.Properties.Add("id", extensionId);
             TelemetryService.DefaultSession.PostEvent(telEvent);
         }

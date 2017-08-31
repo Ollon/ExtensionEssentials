@@ -20,8 +20,8 @@ namespace ExtensionEssentials.Test
         public void TestSetup()
         {
             _cachePath = Path.Combine(Path.GetTempPath(), "cache.json");
-            var store = new DataStore(new StaticRegistryKey(), Constants.LogFilePath);
-            var feed = new LiveFeed(Constants.LiveFeedUrl, _cachePath);
+            DataStore store = new DataStore(new StaticRegistryKey(), Constants.LogFilePath);
+            LiveFeed feed = new LiveFeed(Constants.LiveFeedUrl, _cachePath);
 
             _installer = new Installer(feed, store);
         }

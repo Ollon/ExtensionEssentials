@@ -1,15 +1,22 @@
-﻿using Microsoft.Win32;
+﻿// -----------------------------------------------------------------------
+// <copyright file="RegistryKeyWrapper.cs" company="Ollon, LLC">
+//     Copyright (c) 2017 Ollon, LLC. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using Microsoft.Win32;
 
 namespace ExtensionEssentials
 {
     public class RegistryKeyWrapper : IRegistryKey
     {
-        private RegistryKey _key;
+        private readonly RegistryKey _key;
 
         public RegistryKeyWrapper(RegistryKey key)
         {
             _key = key;
         }
+
         public IRegistryKey CreateSubKey(string subKey)
         {
             return new RegistryKeyWrapper(_key.CreateSubKey(subKey));

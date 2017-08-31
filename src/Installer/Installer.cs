@@ -1,9 +1,17 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="Installer.cs" company="Ollon, LLC">
+//     Copyright (c) 2017 Ollon, LLC. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ExtensionEssentials.Resources;
 using Microsoft.VisualStudio.ExtensionManager;
 
 namespace ExtensionEssentials
@@ -24,9 +32,8 @@ namespace ExtensionEssentials
 
         public async Task<bool> CheckForUpdatesAsync()
         {
-            var file = new FileInfo(LiveFeed.LocalCachePath);
+            FileInfo file = new FileInfo(LiveFeed.LocalCachePath);
             bool hasUpdates = false;
-
             if (!file.Exists || file.LastWriteTime < DateTime.Now.AddDays(-Constants.UpdateIntervalDays))
             {
                 hasUpdates = await LiveFeed.UpdateAsync().ConfigureAwait(false);
@@ -35,34 +42,36 @@ namespace ExtensionEssentials
             {
                 await LiveFeed.ParseAsync().ConfigureAwait(false);
             }
-
             return hasUpdates;
         }
 
-        public async Task RunAsync(Version vsVersion, IVsExtensionRepository repository, IVsExtensionManager manager, CancellationToken cancellationToken)
+        public async Task RunAsync(Version vsVersion,
+            IVsExtensionRepository repository,
+            IVsExtensionManager manager,
+            CancellationToken cancellationToken)
         {
             IEnumerable<ExtensionEntry> toUninstall = GetExtensionsMarkedForDeletion(vsVersion);
             IEnumerable<ExtensionEntry> toInstall = GetMissingExtensions(manager).Except(toUninstall);
-
             int actions = toUninstall.Count() + toInstall.Count();
-
             if (actions > 0)
             {
                 _progress = new Progress(actions);
-
                 await UninstallAsync(toUninstall, repository, manager, cancellationToken).ConfigureAwait(false);
                 await InstallAsync(toInstall, repository, manager, cancellationToken).ConfigureAwait(false);
-
-                Logger.Log(Environment.NewLine + Resources.Text.InstallationComplete + Environment.NewLine);
+                Logger.Log(Environment.NewLine + ExtensionText.InstallationComplete + Environment.NewLine);
                 Done?.Invoke(this, actions);
             }
         }
 
-        private async Task InstallAsync(IEnumerable<ExtensionEntry> extensions, IVsExtensionRepository repository, IVsExtensionManager manager, CancellationToken token)
+        private async Task InstallAsync(IEnumerable<ExtensionEntry> extensions,
+            IVsExtensionRepository repository,
+            IVsExtensionManager manager,
+            CancellationToken token)
         {
             if (!extensions.Any() || token.IsCancellationRequested)
+            {
                 return;
-
+            }
             await Task.Run(() =>
             {
                 try
@@ -70,14 +79,15 @@ namespace ExtensionEssentials
                     foreach (ExtensionEntry extension in extensions)
                     {
                         if (token.IsCancellationRequested)
+                        {
                             return;
-
+                        }
                         InstallExtension(extension, repository, manager);
                     }
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.Write(ex);
+                    Debug.Write(ex);
                 }
                 finally
                 {
@@ -86,11 +96,15 @@ namespace ExtensionEssentials
             }).ConfigureAwait(false);
         }
 
-        private async Task UninstallAsync(IEnumerable<ExtensionEntry> extensions, IVsExtensionRepository repository, IVsExtensionManager manager, CancellationToken token)
+        private async Task UninstallAsync(IEnumerable<ExtensionEntry> extensions,
+            IVsExtensionRepository repository,
+            IVsExtensionManager manager,
+            CancellationToken token)
         {
             if (!extensions.Any() || token.IsCancellationRequested)
+            {
                 return;
-
+            }
             await Task.Run(() =>
             {
                 try
@@ -98,13 +112,12 @@ namespace ExtensionEssentials
                     foreach (ExtensionEntry extension in extensions)
                     {
                         if (token.IsCancellationRequested)
+                        {
                             return;
-
-                        string msg = string.Format(Resources.Text.UninstallingExtension, extension.Name);
-
+                        }
+                        string msg = string.Format(ExtensionText.UninstallingExtension, extension.Name);
                         OnUpdate(msg);
                         Logger.Log(msg, false);
-
                         try
                         {
                             if (manager.TryGetInstalledExtension(extension.Id, out IInstalledExtension installedExtension))
@@ -113,14 +126,13 @@ namespace ExtensionEssentials
                                 manager.Uninstall(installedExtension);
                                 Telemetry.Uninstall(extension.Id, true);
 #endif
-
                                 Store.MarkUninstalled(extension);
-                                Logger.Log(Resources.Text.Ok);
+                                Logger.Log(ExtensionText.Ok);
                             }
                         }
                         catch (Exception)
                         {
-                            Logger.Log(Resources.Text.Failed);
+                            Logger.Log(ExtensionText.Failed);
                             Telemetry.Uninstall(extension.Id, false);
                         }
                     }
@@ -135,40 +147,37 @@ namespace ExtensionEssentials
         private void InstallExtension(ExtensionEntry extension, IVsExtensionRepository repository, IVsExtensionManager manager)
         {
             GalleryEntry entry = null;
-            OnUpdate(string.Format(Resources.Text.InstallingExtension, extension.Name));
-
+            OnUpdate(string.Format(ExtensionText.InstallingExtension, extension.Name));
             try
             {
                 Logger.Log($"{Environment.NewLine}{extension.Name}");
-                Logger.Log("  " + Resources.Text.Verifying, false);
-
-                entry = repository.GetVSGalleryExtensions<GalleryEntry>(new List<string> { extension.Id }, 1033, false)?.FirstOrDefault();
-
+                Logger.Log("  " + ExtensionText.Verifying, false);
+                entry = repository.GetVSGalleryExtensions<GalleryEntry>(new List<string> {extension.Id}, 1033, false)?.FirstOrDefault();
                 if (entry != null)
                 {
-                    Logger.Log(Resources.Text.Ok); // Marketplace ok
-                    Logger.Log("  " + Resources.Text.Downloading, false);
+                    Logger.Log(ExtensionText.Ok); // Marketplace ok
+                    Logger.Log("  " + ExtensionText.Downloading, false);
 #if !DEBUG
                     IInstallableExtension installable = repository.Download(entry);
 #endif
-                    Logger.Log(Resources.Text.Ok); // Download ok
-                    Logger.Log("  " + Resources.Text.Installing, false);
+                    Logger.Log(ExtensionText.Ok); // Download ok
+                    Logger.Log("  " + ExtensionText.Installing, false);
 #if !DEBUG
                     manager.Install(installable, false);
 #else
                     Thread.Sleep(2000);
 #endif
-                    Logger.Log(Resources.Text.Ok); // Install ok
+                    Logger.Log(ExtensionText.Ok); // Install ok
                     Telemetry.Install(extension.Id, true);
                 }
                 else
                 {
-                    Logger.Log(Resources.Text.Failed); // Markedplace failed
+                    Logger.Log(ExtensionText.Failed); // Markedplace failed
                 }
             }
             catch (Exception)
             {
-                Logger.Log(Resources.Text.Failed);
+                Logger.Log(ExtensionText.Failed);
                 Telemetry.Install(extension.Id, false);
             }
             finally
@@ -183,8 +192,8 @@ namespace ExtensionEssentials
         private IEnumerable<ExtensionEntry> GetMissingExtensions(IVsExtensionManager manager)
         {
             IEnumerable<IInstalledExtension> installed = manager.GetInstalledExtensions();
-            IEnumerable<ExtensionEntry> notInstalled = LiveFeed.Extensions.Where(ext => !installed.Any(ins => ins.Header.Identifier == ext.Id));
-
+            IEnumerable<ExtensionEntry> notInstalled =
+                LiveFeed.Extensions.Where(ext => !installed.Any(ins => ins.Header.Identifier == ext.Id));
             return notInstalled.Where(ext => !Store.HasBeenInstalled(ext.Id));
         }
 
@@ -197,11 +206,11 @@ namespace ExtensionEssentials
         {
             _progress.Current += 1;
             _progress.Text = text;
-
             Update?.Invoke(this, _progress);
         }
 
         public event EventHandler<Progress> Update;
+
         public event EventHandler<int> Done;
     }
 }

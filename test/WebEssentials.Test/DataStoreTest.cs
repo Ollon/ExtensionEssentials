@@ -30,7 +30,7 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public void ExtensionInstalledNoLogFile()
         {
-            var store = new DataStore(_registry, _logFile);
+            DataStore store = new DataStore(_registry, _logFile);
             store.MarkInstalled(_entry);
 
             Assert.AreEqual(1, store.Log.Count);
@@ -46,7 +46,7 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public void ExtensionUninstalledNoLogFile()
         {
-            var store = new DataStore(_registry, _logFile);
+            DataStore store = new DataStore(_registry, _logFile);
             store.MarkUninstalled(_entry);
             store.Save();
 
@@ -59,12 +59,12 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public void LogFileExist()
         {
-            var msg = new[] { new LogMessage(_entry, "Installed") };
+            LogMessage[] msg = new[] { new LogMessage(_entry, "Installed") };
 
-            var json = JsonConvert.SerializeObject(msg);
+            string json = JsonConvert.SerializeObject(msg);
             File.WriteAllText(_logFile, json);
 
-            var store = new DataStore(_registry, _logFile);
+            DataStore store = new DataStore(_registry, _logFile);
 
             Assert.IsTrue(store.HasBeenInstalled(_entry.Id));
             Assert.AreEqual(1, store.Log.Count);
@@ -74,12 +74,12 @@ namespace ExtensionEssentials.Test
         [TestMethod]
         public void Reset()
         {
-            var msg = new[] { new LogMessage(_entry, "Installed") };
+            LogMessage[] msg = new[] { new LogMessage(_entry, "Installed") };
 
-            var json = JsonConvert.SerializeObject(msg);
+            string json = JsonConvert.SerializeObject(msg);
             File.WriteAllText(_logFile, json);
 
-            var store = new DataStore(_registry, _logFile);
+            DataStore store = new DataStore(_registry, _logFile);
 
             Assert.AreEqual(1, store.Log.Count);
 
