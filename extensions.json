@@ -1,0 +1,81 @@
+{
+
+  "Productivity Power Tools 2017": {
+    "id": "ProductivityPowerPack.0d5b9d71-e118-46de-a20c-555176e53900"
+  },
+  "Custom Control with Resource Dictionary (WPF)": {
+    "id": "CustomControlDictionary.CS"
+  },
+  "Microsoft Visual Studio 2017 Installer Projects": {
+    "id": "VSInstallerProjects"
+  },
+  "SideWaffle Template Pack": {
+    "id": "e6e2a48e-387d-4af2-9072-86a5276da6d4"
+  },
+  "ResXManager": {
+    "id": "43b35fe0-1f30-48de-887a-68256474202a"
+  },
+  "Color Picker": {
+    "id": "11559f0c-c44f-4a26-98e7-f5015f07d691"
+  },
+  "Visual Studio 2017 Color Theme Editor": {
+    "id": "VSColorThemeEditor.26c6a2c2-1956-480f-845d-c32d9a14e1b4"
+  },
+  "Generate GUID for Visual Studio 2012-2017": {
+    "id": "473b51ac-c906-4c7a-959b-ec1983eb28bb"
+  },
+  "VSRestart2017": {
+    "id": "VSRestart2017.e7583424-ec31-419a-95ab-52516270c426"
+  },
+  "Snippet Designer": {
+    "id": "d21b0d98-7dad-421e-895e-424a0a4e6f0e"
+  },
+  "Roslynator 2017": {
+    "id": "9289a8ab-1bb6-496b-9992-9f7ea27f66a8"
+  },
+  "Visual Studio Project System Extensibility": {
+    "id": "Microsoft.VisualStudio.ProjectSystem.SDK.Dev15"
+  },
+  "Var Replacer": {
+    "id": "VarReplacer..8947c111-320d-47c5-aafc-f230edd29872"
+  },
+  "Add New File": {
+    "id": "2E78AA18-E864-4FBB-B8C8-6186FC865DB3"
+  },
+  "Editor Enhancements": {
+    "id": "a3112f81-e423-4f88-9f2c-e089a309e48e"
+  },
+  "EditorConfig Language Service": {
+    "id": "1209461d-57f8-46a4-814a-dbe5fecef941"
+  },
+  "File Nesting": {
+    "id": "6c799bc4-0d4c-4172-98bc-5d464b612dca"
+  },
+  "Markdown Editor": {
+    "id": "9ca64947-e9ca-4543-bfb8-6cce9be19fd6"
+  },
+  "Project File Tools": {
+    "id": "e22f3d7e-6b01-4ef8-b3cb-ea293a87b00e"
+  },
+  "XAML Regions": {
+    "id": "XAMLRegions.Microsoft.fabeed8b-a407-4d78-bb62-47310d783399"
+  },
+  ".ignore": {
+    "id": "7ac24965-ea21-4108-9cac-6e46394aaaef"
+  },
+  ".NET Compiler Platform SDK": {
+    "id": "3a012d4e-6057-4e7c-8123-6d4be1d4723c"
+  },
+  "GitLab Extension for Visual Studio": {
+    "id": "54803a44-49e0-4935-bba4-7d7d91682273"
+  },
+  "SmartPaster2017": {
+    "id": "233fade6-f9e1-4a0d-8784-089004c574fc"
+  },
+  "Fix Namespace": {
+    "id": "f073da8c-bb52-41f8-b95a-a6346b1a0b52"
+  },
+  "XAML Styler": {
+    "id": "0c572937-0d4a-48cc-aa3f-875ffa9805ba"
+  }
+}
