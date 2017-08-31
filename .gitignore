@@ -21,6 +21,7 @@ x64/
 x86/
 bld/
 [Bb]in/
+[Bb]inaries/
 [Oo]bj/
 [Ll]og/
 
@@ -46,7 +47,8 @@ dlldata.c
 project.lock.json
 project.fragment.lock.json
 artifacts/
-**/Properties/launchSettings.json
+
+!**/Properties/launchSettings.json
 
 *_i.c
 *_p.c
